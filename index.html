@@ -94,7 +94,7 @@
         }
 
         /* Welcome Screen */
-        .welcome-content text-align: center; {
+        .welcome-content {
             text-align: center;
         }
 
@@ -446,7 +446,7 @@
                     "17 Schafe"
                 ],
                 answer: 1,
-                explanation: "Der Satz lautet 'Alle BIS AFUF 9 starben'. Das bedeutet, genau 9 Schafe haben überlebt."
+                explanation: "Der Satz lautet 'Alle bis auf 9 starben'. Das bedeutet, genau 9 Schafe haben überlebt."
             },
             {
                 question: "Teile 30 durch die Hälfte und addiere 10. Was kommt heraus?",
@@ -490,7 +490,7 @@
                     "30 Minuten"
                 ],
                 answer: 1,
-                explanation: "1. Pille sofort um 0:00 Uhr, 2. Pille nach 30 Min., 3. Pille nach 60 Min. Insgesamt reicht der Vorrat also genau 1 Stunde."
+                explanation: "1. Pille sofort, 2. Pille nach 30 Min., 3. Pille nach 60 Min. Insgesamt reicht der Vorrat also genau 1 Stunde."
             },
             {
                 question: "In einem einstöckigen pinken Haus wohnen ein pinker Mensch, eine pinke Katze und ein pinker Fisch. Welche Farbe hat die Treppe?",
@@ -523,7 +523,7 @@
                     "Einen Rekord / Eine Wette"
                 ],
                 answer: 3,
-                explanation: "Man kann 'eine Wette kochen' (gewinnen) oder 'Wasser kochen' (letzteres kann man aber trinken/essen). Klassische Redewendung: Eine Wette kochen."
+                explanation: "Man kann 'eine Wette kochen' (gewinnen) oder 'Wasser kochen' (letzteres kann man trinken). Klassische Redewendung: Eine Wette kochen."
             },
             {
                 question: "Ein Fuchs läuft durch den Wald. Wie viele Beine hat der Fuchs?",
@@ -599,4 +599,246 @@
                 osc.frequency.setValueAtTime(440, now);
                 osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
                 gainNode.gain.setValueAtTime(0.15, now);
-                gainNode.gain.linearRampToValueAtTime(0, now + 0.
+                gainNode.gain.linearRampToValueAtTime(0, now + 0.2);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, now);
+                osc.frequency.linearRampToValueAtTime(100, now + 0.25);
+                gainNode.gain.setValueAtTime(0.2, now);
+                gainNode.gain.linearRampToValueAtTime(0, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } else if (type === 'tick') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(600, now);
+                gainNode.gain.setValueAtTime(0.03, now);
+                gainNode.gain.linearRampToValueAtTime(0, now + 0.05);
+                osc.start(now);
+                osc.stop(now + 0.05);
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const btn = document.getElementById('soundToggle');
+            btn.textContent = soundEnabled ? "🔊 Sound: An" : "🔇 Sound: Aus";
+        }
+
+        // Screen Switcher
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // Start Quiz
+        function startQuiz() {
+            initAudio();
+            currentQuestionIndex = 0;
+            score = 0;
+            correctCount = 0;
+            wrongCount = 0;
+            resultsLog = [];
+            totalTimeSpent = 0;
+            showScreen('quizScreen');
+            loadQuestion();
+        }
+
+        // Load Question
+        function loadQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                endQuiz();
+                return;
+            }
+
+            isAnswered = false;
+            const q = questions[currentQuestionIndex];
+            
+            document.getElementById('questionCounter').textContent = `Frage ${currentQuestionIndex + 1} von ${questions.length}`;
+            document.getElementById('questionText').textContent = q.question;
+
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt;
+                btn.onclick = () => selectAnswer(idx);
+                container.appendChild(btn);
+            });
+
+            // Start Timer (15 Sekunden)
+            timeLeft = totalTimePerQuestion;
+            updateTimerDisplay();
+            
+            if (timer) clearInterval(timer);
+            timer = setInterval(() => {
+                timeLeft -= 0.1;
+                updateTimerDisplay();
+
+                if (Math.abs(timeLeft - Math.round(timeLeft)) < 0.08 && timeLeft > 0) {
+                    playSound('tick');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    handleTimeout();
+                }
+            }, 100);
+        }
+
+        function updateTimerDisplay() {
+            const timeEl = document.getElementById('timeRemaining');
+            const barEl = document.getElementById('timerBar');
+            
+            timeEl.textContent = Math.max(0, timeLeft).toFixed(1) + 's';
+            const percentage = Math.max(0, (timeLeft / totalTimePerQuestion) * 100);
+            barEl.style.transform = `scaleX(${percentage / 100})`;
+
+            // Farbwechsel im Timer (Grün -> Gelb -> Rot)
+            if (percentage > 50) {
+                barEl.style.backgroundColor = 'var(--success)';
+            } else if (percentage > 25) {
+                barEl.style.backgroundColor = '#f59e0b';
+            } else {
+                barEl.style.backgroundColor = 'var(--danger)';
+            }
+        }
+
+        // Handle Timeout
+        function handleTimeout() {
+            if (isAnswered) return;
+            isAnswered = true;
+            wrongCount++;
+            totalTimeSpent += totalTimePerQuestion;
+
+            const q = questions[currentQuestionIndex];
+            resultsLog.push({
+                question: q.question,
+                selected: "⏰ Zeit abgelaufen (zu langsam)",
+                correct: q.options[q.answer],
+                isCorrect: false,
+                explanation: q.explanation
+            });
+
+            playSound('wrong');
+            highlightAnswers(-1);
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                loadQuestion();
+            }, 1500);
+        }
+
+        // Select Answer
+        function selectAnswer(selectedIndex) {
+            if (isAnswered) return;
+            isAnswered = true;
+            clearInterval(timer);
+
+            const timeSpent = totalTimePerQuestion - timeLeft;
+            totalTimeSpent += timeSpent;
+
+            const q = questions[currentQuestionIndex];
+            const isCorrect = (selectedIndex === q.answer);
+
+            if (isCorrect) {
+                score++;
+                correctCount++;
+                playSound('correct');
+            } else {
+                wrongCount++;
+                playSound('wrong');
+            }
+
+            resultsLog.push({
+                question: q.question,
+                selected: q.options[selectedIndex],
+                correct: q.options[q.answer],
+                isCorrect: isCorrect,
+                explanation: q.explanation
+            });
+
+            highlightAnswers(selectedIndex);
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                loadQuestion();
+            }, 1500);
+        }
+
+        // Highlight Buttons
+        function highlightAnswers(selectedIndex) {
+            const q = questions[currentQuestionIndex];
+            const buttons = document.querySelectorAll('.options-grid .option-btn');
+
+            buttons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx === q.answer) {
+                    btn.classList.add('correct');
+                } else if (idx === selectedIndex) {
+                    btn.classList.add('wrong');
+                }
+            });
+        }
+
+        // End Quiz
+        function endQuiz() {
+            showScreen('resultScreen');
+
+            document.getElementById('finalScore').textContent = `${score} / ${questions.length}`;
+            document.getElementById('statCorrect').textContent = correctCount;
+            document.getElementById('statWrong').textContent = wrongCount;
+            
+            const avgTime = (totalTimeSpent / questions.length).toFixed(1);
+            document.getElementById('statTime').textContent = avgTime + 's';
+
+            let title = "";
+            let comment = "";
+            const percentage = (score / questions.length) * 100;
+
+            if (percentage === 100) {
+                title = "🏆 Absolutes Genie (oder geschummelt!)";
+                comment = "Unfassbar! Du hast alle Fangfragen fehlerfrei gemeistert.";
+            } else if (percentage >= 80) {
+                title = "🧠 Zertifizierter Überflieger";
+                comment = "Sehr stark! Du hast die Logik-Fallen souverän durchschaut.";
+            } else if (percentage >= 50) {
+                title = "🤷‍♂️ Durchschnittlicher Denker";
+                comment = "Ganz solider Schnitt, aber bei ein paar Fangfragen bist du voll reingetappt.";
+            } else if (percentage >= 20) {
+                title = "🤡 Klassischer Fall";
+                comment = "Huch! Die Zeitnot und die Gemeinheiten haben dich wohl komplett aus dem Konzept gebracht.";
+            } else {
+                title = "🚨 Akuter Notfall";
+                comment = "Herzlichen Glückwunsch! Du hast den ultimativen Idiotentest mit Bravour als Totalversagen abgeschlossen.";
+            }
+
+            document.getElementById('badgeTitle').textContent = title;
+            document.getElementById('resultComment').textContent = comment;
+
+            const reviewList = document.getElementById('reviewList');
+            reviewList.innerHTML = '';
+
+            resultsLog.forEach((res, i) => {
+                const item = document.createElement('div');
+                item.className = `review-item ${res.isCorrect ? 'correct' : 'wrong'}`;
+                
+                item.innerHTML = `
+                    <div class="review-question">Frage ${i+1}: ${res.question}</div>
+                    <div class="review-details">Deine Wahl: <strong>${res.selected}</strong> ${res.isCorrect ? '✅' : '❌'}</div>
+                    ${!res.isCorrect ? `<div class="review-details">Richtig wäre gewesen: <strong>${res.correct}</strong></div>` : ''}
+                    <div class="review-explanation">💡 <em>${res.explanation}</em></div>
+                `;
+                reviewList.appendChild(item);
+            });
+        }
+
+        function restartQuiz() {
+            startQuiz();
+        }
+    </script>
+</body>
+</html>
