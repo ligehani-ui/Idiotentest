@@ -1,647 +1,602 @@
 <!DOCTYPE html>
-<html lang="de" class="dark">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Der Ultimative Idiotentest</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Font: Inter & Outfit -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#eef2ff',
-                            100: '#e0e7ff',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                            900: '#312e81',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        display: ['Outfit', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    <title>Der ultimative Idiotentest</title>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle at top right, #1e1b4b, #0f172a, #090d16);
-            min-height: 100vh;
-            color: #f8fafc;
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --accent: #ec4899;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
         }
-        
-        .glass-card {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Header & Audio Toggle */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sound-btn {
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .sound-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Welcome Screen */
+        .welcome-content text-align: center; {
+            text-align: center;
+        }
+
+        .welcome-content p {
+            color: var(--text-muted);
+            margin: 15px 0 25px 0;
+            line-height: 1.6;
+        }
+
+        .rules-box {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .rules-box ul {
+            list-style-type: none;
+            padding-left: 5px;
+        }
+
+        .rules-box li {
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .rules-box li strong {
+            color: var(--text);
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Quiz Screen */
+        .quiz-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Timer Bar */
+        .timer-container {
+            width: 100%;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .timer-bar {
+            width: 100%;
+            height: 100%;
+            background-color: var(--success);
+            transform-origin: left;
+            transition: transform 0.1s linear, background-color 0.3s;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
         .option-btn {
-            transition: all 0.2s ease-in-out;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            padding: 16px 20px;
+            border-radius: 12px;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
         .option-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            background-color: rgba(99, 102, 241, 0.25);
-            border-color: rgba(99, 102, 241, 0.5);
-            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary);
         }
 
-        .option-btn:active:not(:disabled) {
-            transform: translateY(0);
+        .option-btn.correct {
+            background-color: rgba(34, 197, 94, 0.2);
+            border-color: var(--success);
+            color: #86efac;
         }
 
-        /* Continuous progress bar animation */
-        #timer-bar {
-            transition: width 0.05s linear, background-color 0.3s ease;
+        .option-btn.wrong {
+            background-color: rgba(239, 68, 68, 0.2);
+            border-color: var(--danger);
+            color: #fca5a5;
         }
 
-        /* Pulse animation for timer under 2 seconds */
-        .urgent-pulse {
-            animation: pulse-red 0.5s infinite alternate;
+        /* Result Screen */
+        .results-header {
+            text-align: center;
+            margin-bottom: 25px;
         }
 
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 15px rgba(239, 68, 68, 0.6); }
+        .score-display {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+
+        .badge-title {
+            font-size: 1.1rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stats-summary {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-card .val {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .stat-card .lbl {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .review-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 25px;
+            padding-right: 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .review-item {
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
+            padding: 12px 15px;
+            border-left: 4px solid var(--text-muted);
+        }
+
+        .review-item.correct {
+            border-left-color: var(--success);
+        }
+
+        .review-item.wrong {
+            border-left-color: var(--danger);
+        }
+
+        .review-question {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .review-details {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .review-explanation {
+            font-size: 0.85rem;
+            margin-top: 6px;
+            color: #cbd5e1;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 6px 10px;
+            border-radius: 6px;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
         }
     </style>
 </head>
-<body class="flex flex-col min-h-screen justify-between p-4 md:p-6 select-none">
+<body>
 
-    <!-- Header / Navbar -->
-    <header class="max-w-4xl w-full mx-auto flex justify-between items-center py-4 px-2">
-        <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-pink-500 flex items-center justify-center text-white font-black text-xl shadow-lg">
-                <i class="fa-solid fa-brain"></i>
-            </div>
-            <h1 class="font-display font-extrabold text-xl md:text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-indigo-200 to-indigo-400">
-                Idiotentest Deluxe
-            </h1>
-        </div>
-        
-        <!-- Sound Toggle Button -->
-        <button id="sound-toggle-btn" class="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-700/50 transition" title="Sound umschalten">
-            <i id="sound-icon" class="fa-solid fa-volume-high"></i>
-        </button>
-    </header>
-
-    <!-- Main Container -->
-    <main class="max-w-2xl w-full mx-auto my-auto py-6">
-        
-        <!-- START SCREEN -->
-        <div id="start-screen" class="glass-card rounded-3xl p-6 md:p-10 text-center relative overflow-hidden">
-            <div class="absolute -right-16 -top-16 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
-            
-            <div class="w-20 h-20 bg-indigo-500/20 text-indigo-400 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-indigo-500/30 text-3xl">
-                <i class="fa-solid fa-stopwatch-20"></i>
-            </div>
-            
-            <h2 class="font-display text-3xl md:text-4xl font-extrabold text-white mb-4">
-                Bist du schlauer als der Durchschnitt?
-            </h2>
-            
-            <p class="text-slate-300 text-base md:text-lg mb-8 max-w-lg mx-auto leading-relaxed">
-                Du hast exakt <span class="text-amber-400 font-bold underline decoration-amber-400/50">6,7 Sekunden</span> Zeit pro Frage! 
-                Pass auf: Viele Fragen enthalten gemeine Fangfragen. Wer zu langsam denkt, hat bereits verloren!
-            </p>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-left max-w-md mx-auto">
-                <div class="bg-slate-800/50 p-3 rounded-2xl border border-slate-700/50 flex items-center space-x-3">
-                    <i class="fa-solid fa-bolt text-amber-400 text-xl"></i>
-                    <span class="text-xs text-slate-300"><strong class="block text-white text-sm">6.7 Sek.</strong> Zeitdruck</span>
-                </div>
-                <div class="bg-slate-800/50 p-3 rounded-2xl border border-slate-700/50 flex items-center space-x-3">
-                    <i class="fa-solid fa-masks-theater text-indigo-400 text-xl"></i>
-                    <span class="text-xs text-slate-300"><strong class="block text-white text-sm">Fangfragen</strong> Logik</span>
-                </div>
-                <div class="bg-slate-800/50 p-3 rounded-2xl border border-slate-700/50 flex items-center space-x-3">
-                    <i class="fa-solid fa-chart-pie text-emerald-400 text-xl"></i>
-                    <span class="text-xs text-slate-300"><strong class="block text-white text-sm">Erklärung</strong> am Ende</span>
-                </div>
-            </div>
-
-            <button id="start-btn" class="w-full sm:w-auto px-10 py-4 bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 text-white font-extrabold text-lg rounded-2xl shadow-lg shadow-indigo-500/30 transition transform hover:-translate-y-0.5 active:translate-y-0">
-                Test Jetzt Starten <i class="fa-solid fa-arrow-right ml-2 text-sm"></i>
-            </button>
+    <div class="container">
+        <!-- Header -->
+        <div class="app-header">
+            <h1>🧠 Idiotentest Deluxe</h1>
+            <button class="sound-btn" id="soundToggle" onclick="toggleSound()">🔊 Sound: An</button>
         </div>
 
-        <!-- QUIZ SCREEN -->
-        <div id="quiz-screen" class="hidden glass-card rounded-3xl p-6 md:p-8 relative">
-            
-            <!-- Progress & Header Bar -->
-            <div class="flex justify-between items-center mb-6">
-                <span id="question-counter" class="text-xs md:text-sm font-semibold tracking-wider text-indigo-400 uppercase bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">
-                    Frage 1 von 10
-                </span>
-                <div class="flex items-center space-x-2 text-slate-400 text-sm font-mono">
-                    <i class="fa-regular fa-clock text-amber-400"></i>
-                    <span id="timer-text" class="text-white font-bold text-base">6.7s</span>
+        <!-- Welcome Screen -->
+        <div id="welcomeScreen" class="screen active">
+            <div class="welcome-content">
+                <p>Bist du schlau genug, oder gehörst du offiziell in die Kategorie "Schwerer Fall"? Finde es heraus!</p>
+                <div class="rules-box">
+                    <ul>
+                        <li>⏱️ Du hast genau <strong>15 Sekunden</strong> Zeit pro Frage.</li>
+                        <li>❌ Wer zu langsam ist, bekommt automatisch einen <strong>Fehler</strong>.</li>
+                        <li>🎯 15 knifflige Fangfragen erwarten dich.</li>
+                        <li>💡 Am Ende gibt es die detaillierte Auswertung mit Erklärungen.</li>
+                    </ul>
                 </div>
-            </div>
-
-            <!-- Animated Countdown Bar Container -->
-            <div class="w-full bg-slate-700/50 h-3 rounded-full overflow-hidden mb-8 border border-slate-600/30 p-0.5">
-                <div id="timer-bar" class="h-full bg-emerald-500 rounded-full w-full"></div>
-            </div>
-
-            <!-- Question Text -->
-            <div class="min-h-[90px] flex items-center justify-center mb-8 text-center">
-                <h3 id="question-text" class="font-display text-xl md:text-2xl font-bold text-white leading-snug">
-                    ...
-                </h3>
-            </div>
-
-            <!-- Options Grid -->
-            <div id="options-container" class="grid grid-cols-1 gap-3.5 mb-4">
-                <!-- Buttons injected dynamically -->
-            </div>
-
-            <!-- Feedback Overlay / Toast -->
-            <div id="feedback-toast" class="hidden mt-4 p-4 rounded-2xl text-center font-bold text-base transition-all transform duration-300">
-                <span id="feedback-message"></span>
+                <button class="btn" onclick="startQuiz()">Test starten</button>
             </div>
         </div>
 
-        <!-- RESULT SCREEN -->
-        <div id="result-screen" class="hidden glass-card rounded-3xl p-6 md:p-8">
-            <div class="text-center mb-8">
-                <div id="result-badge" class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-xl">
-                    <!-- Icon inserted by JS -->
-                </div>
-                
-                <h2 id="result-title" class="font-display text-2xl md:text-3xl font-black text-white mb-2">
-                    Ergebnis geladen...
-                </h2>
-                <p id="result-subtitle" class="text-slate-400 text-sm md:text-base">
-                    Hier ist deine idiotensichere Auswertung.
-                </p>
-
-                <!-- Score Summary Cards -->
-                <div class="grid grid-cols-3 gap-3 my-6 max-w-md mx-auto">
-                    <div class="bg-slate-800/60 p-3 rounded-2xl border border-slate-700/50">
-                        <span class="block text-xs text-slate-400 font-medium">Richtig</span>
-                        <span id="score-correct" class="text-2xl font-extrabold text-emerald-400">0</span>
-                    </div>
-                    <div class="bg-slate-800/60 p-3 rounded-2xl border border-slate-700/50">
-                        <span class="block text-xs text-slate-400 font-medium">Falsch</span>
-                        <span id="score-wrong" class="text-2xl font-extrabold text-rose-400">0</span>
-                    </div>
-                    <div class="bg-slate-800/60 p-3 rounded-2xl border border-slate-700/50">
-                        <span class="block text-xs text-slate-400 font-medium">Zu langsam</span>
-                        <span id="score-timeout" class="text-2xl font-extrabold text-amber-400">0</span>
-                    </div>
-                </div>
-
-                <button id="restart-btn" class="px-8 py-3.5 bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 text-white font-extrabold text-base rounded-2xl shadow-lg shadow-indigo-500/30 transition transform hover:-translate-y-0.5 active:translate-y-0">
-                    <i class="fa-solid fa-rotate-right mr-2"></i> Noch einmal versuchen
-                </button>
+        <!-- Quiz Screen -->
+        <div id="quizScreen" class="screen">
+            <div class="quiz-meta">
+                <span id="questionCounter">Frage 1 von 15</span>
+                <span id="timeRemaining">15.0s</span>
             </div>
-
-            <hr class="border-slate-700/60 my-6">
-
-            <!-- Detailed Answers Review -->
-            <h3 class="font-display font-bold text-lg text-white mb-4 flex items-center">
-                <i class="fa-solid fa-list-check text-indigo-400 mr-2"></i> Detailauswertung & Erklärungen:
-            </h3>
-
-            <div id="details-list" class="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                <!-- Detailed question cards injected via JS -->
+            <div class="timer-container">
+                <div class="timer-bar" id="timerBar"></div>
             </div>
+            <div class="question-text" id="questionText">Frage lädt...</div>
+            <div class="options-grid" id="optionsContainer"></div>
         </div>
 
-    </main>
+        <!-- Result Screen -->
+        <div id="resultScreen" class="screen">
+            <div class="results-header">
+                <div class="badge-title" id="badgeTitle">Auswertung läuft...</div>
+                <div class="score-display" id="finalScore">0 / 15</div>
+                <p id="resultComment" style="color: var(--text-muted); font-size: 0.95rem;"></p>
+            </div>
 
-    <!-- Footer -->
-    <footer class="max-w-4xl w-full mx-auto text-center py-4 text-xs text-slate-500">
-        <p>Ein unterhaltsamer Idiotentest. Lass dich nicht austricksen! 😉</p>
-    </footer>
+            <div class="stats-summary">
+                <div class="stat-card">
+                    <div class="val" id="statCorrect" style="color: var(--success);">0</div>
+                    <div class="lbl">Richtig</div>
+                </div>
+                <div class="stat-card">
+                    <div class="val" id="statWrong" style="color: var(--danger);">0</div>
+                    <div class="lbl">Falsch / Zu langsam</div>
+                </div>
+                <div class="stat-card">
+                    <div class="val" id="statTime">0.0s</div>
+                    <div class="lbl">Ø Zeit</div>
+                </div>
+            </div>
 
-    <!-- JavaScript Game Logic -->
+            <h3 style="font-size: 1rem; margin-bottom: 10px; color: var(--text-muted);">Detail-Analyse & Erklärungen:</h3>
+            <div class="review-list" id="reviewList"></div>
+
+            <button class="btn" onclick="restartQuiz()">Test wiederholen</button>
+        </div>
+    </div>
+
     <script>
-        // Questions Database with Trick Questions & Funny Explanations
-        const questionsDB = [
+        // Fragen-Datenbank (15 Fragen)
+        const questions = [
             {
-                question: "Wie viele Tiere jeder Art nahm Mose mit auf die Arche?",
-                options: ["Jeweils 2 Tiere", "Keine", "7 Paare", "Jeweils 1 Paar"],
-                correctIndex: 1,
-                explanation: "Gar keine! Es war nicht Mose, sondern Noah, der die Arche gebaut hat."
+                question: "Wenn ein elektrischer Zug mit 100 km/h nach Norden fährt und der Wind stark von Osten weht – wohin zieht der Rauch?",
+                options: [
+                    "Nach Süden",
+                    "Nach Westen",
+                    "Gar nicht, ein Elektrozug hat keinen Rauch!",
+                    "Kommt auf die Windrichtung an"
+                ],
+                answer: 2,
+                explanation: "Ein Elektrozug verbrennt keine Kohle oder Holz – er hat schlicht und einfach keinen Rauch!"
             },
             {
-                question: "Ein Elektrozug fährt nach Süden. Wohin zieht der Rauch?",
-                options: ["Nach Norden", "Nach Süden", "Nirgends hin", "Nach Westen"],
-                correctIndex: 2,
-                explanation: "Ein Elektrozug erzeugt überhaupt keinen Rauch!"
+                question: "Wie viele Monate haben 28 Tage im Jahr?",
+                options: [
+                    "Nur 1 (Februar)",
+                    "Alle 12 Monate!",
+                    "Genau 2",
+                    "Kommt drauf an ob Schaltjahr"
+                ],
+                answer: 1,
+                explanation: "Jeder einzelne der 12 Monate hat mindestens 28 Tage."
             },
             {
-                question: "Einige Monate haben 30 Tage, andere haben 31 Tage. Wie viele Monate haben 28 Tage?",
-                options: ["Nur der Februar (1)", "Keiner (0)", "Alle 12 Monate", "Nur Schaltjahre"],
-                correctIndex: 2,
-                explanation: "Alle 12 Monate haben mindestens 28 Tage!"
+                question: "Du nimmst an einem Wettrennen teil und überholst den Zweiten. Welchen Platz belegst du jetzt?",
+                options: [
+                    "Erster Platz",
+                    "Zweiter Platz",
+                    "Dritter Platz",
+                    "Letzter Platz"
+                ],
+                answer: 1,
+                explanation: "Wenn du den Zweiten überholst, nimmst du seinen Platz ein. Du bist also nun Zweiter."
             },
             {
-                question: "Gibt es den 14. Juli auch in England?",
-                options: ["Nein, nur in Frankreich", "Ja, natürlich", "Nur in Schaltjahren", "Nein, England hat einen anderen Kalender"],
-                correctIndex: 1,
-                explanation: "Natürlich gibt es den 14. Juli in England. Es ist dort genauso ein Kalendertag wie überall sonst auf der Welt (auch wenn es kein Nationalfeiertag ist)."
+                question: "Manche Monate haben 30, andere 31 Tage. Wie viele Monate haben genau 29 Tage?",
+                options: [
+                    "Nur der Februar",
+                    "Gar keiner",
+                    "Alle 12 Monate",
+                    "Genau 6 Monate"
+                ],
+                answer: 2,
+                explanation: "Da im Februar (und allen anderen Monaten) auch der 29. Tag vorkommt, haben alle 12 Monate einen 29. Tag."
             },
             {
-                question: "Du überholst den Zweiten in einem Wettrennen. An welcher Position bist du jetzt?",
-                options: ["Erster", "Zweiter", "Dritter", "Letzter"],
-                correctIndex: 1,
-                explanation: "Wenn du den Zweiten überholst, nimmst du seinen Platz ein – du bist also Zweiter!"
+                question: "Ein Bauer hatte 17 Schafe. Alle bis auf 9 starben. Wie viele Schafe leben noch?",
+                options: [
+                    "8 Schafe",
+                    "9 Schafe",
+                    "Keins",
+                    "17 Schafe"
+                ],
+                answer: 1,
+                explanation: "Der Satz lautet 'Alle BIS AFUF 9 starben'. Das bedeutet, genau 9 Schafe haben überlebt."
             },
             {
-                question: "Wie viele Geburtstage hat ein durchschnittlicher Mensch?",
-                options: ["Einen", "Jedes Jahr einen", "Ungefähr 75", "Hängt vom Alter ab"],
-                correctIndex: 0,
-                explanation: "Ein Mensch wird nur einmal geboren, hat also nur EINEN Geburtstag (feiert diesen aber jedes Jahr)."
+                question: "Teile 30 durch die Hälfte und addiere 10. Was kommt heraus?",
+                options: [
+                    "25",
+                    "70",
+                    "40",
+                    "15"
+                ],
+                answer: 1,
+                explanation: "Die Hälfte von 30 ist 15. Teilt man 30 durch 0,5 (die Hälfte), erhält man 60. Plus 10 sind das 70!"
             },
             {
-                question: "Wenn ein Arzt dir 3 Tabletten gibt und sagt, dass du alle halbe Stunde eine nehmen sollst, wie lange reichen sie?",
-                options: ["1,5 Stunden", "1 Stunde", "3 Stunden", "2 Stunden"],
-                correctIndex: 1,
-                explanation: "Sie reichen genau 1 Stunde! Du nimmst die erste sofort (0 Min.), die zweite nach 30 Min. und die dritte nach 60 Min."
+                question: "Wie lautet die korrekte Redewendung: 'Der Eidotter ist weiß' oder 'Das Eidotter ist weiß'?",
+                options: [
+                    "Der Eidotter ist weiß",
+                    "Das Eidotter ist weiß",
+                    "Beides ist absolut richtig",
+                    "Keines von beiden, Eidotter ist gelb!"
+                ],
+                answer: 3,
+                explanation: "Fangfrage! Das Eidotter (das Gelbe vom Ei) ist natürlich niemals weiß."
             },
             {
-                question: "Bauer Heinrich hat 17 Schafe. Alle außer 9 sterben. Wie viele Schafe bleiben ihm übrig?",
-                options: ["8 Schafe", "9 Schafe", "0 Schafe", "17 Schafe"],
-                correctIndex: 1,
-                explanation: "Es bleiben 9 Schafe übrig ('Alle AUẞER 9' bedeutet, dass genau 9 überleben)."
+                question: "Du gehst abends um 20:00 Uhr ins Bett und stellst den Wecker auf 9:00 Uhr morgens. Wie viele Stunden schläfst du?",
+                options: [
+                    "13 Stunden",
+                    "9 Stunden",
+                    "1 Stunde",
+                    "12 Stunden"
+                ],
+                answer: 2,
+                explanation: "Ein mechanischer Wecker ohne Datumsanzeige klingelt morgens schon um 9:00 Uhr. Du schläfst also nur 1 Stunde."
             },
             {
-                question: "Wie viel Erde liegt in einem Loch von 2m Länge, 2m Breite und 2m Tiefe?",
-                options: ["8 Kubikmeter", "4 Kubikmeter", "Gar keine", "2 Kubikmeter"],
-                correctIndex: 2,
-                explanation: "Gar keine Erde! Ein Loch ist ja gerade dadurch definiert, dass keine Erde drin ist."
+                question: "Dein Arzt gibt dir 3 Pillen und sagt, du sollst alle halbe Stunde eine nehmen. Wie lange reichen sie?",
+                options: [
+                    "1,5 Stunden",
+                    "1 Stunde",
+                    "2 Stunden",
+                    "30 Minuten"
+                ],
+                answer: 1,
+                explanation: "1. Pille sofort um 0:00 Uhr, 2. Pille nach 30 Min., 3. Pille nach 60 Min. Insgesamt reicht der Vorrat also genau 1 Stunde."
             },
             {
-                question: "Was war der höchste Berg der Welt, BEVOR der Mount Everest entdeckt wurde?",
-                options: ["Der K2", "Der Kilimandscharo", "Der Mount Everest", "Der Mont Blanc"],
-                correctIndex: 2,
-                explanation: "Der Mount Everest! Er war auch vor seiner Entdeckung schon der höchste Berg der Erde."
+                question: "In einem einstöckigen pinken Haus wohnen ein pinker Mensch, eine pinke Katze und ein pinker Fisch. Welche Farbe hat die Treppe?",
+                options: [
+                    "Pink",
+                    "Weiß",
+                    "Holzfarben",
+                    "Es gibt keine Treppe (einstöckiges Haus)!"
+                ],
+                answer: 3,
+                explanation: "Es ist ein *einstöckiges* Haus – das hat gar keine Treppe!"
+            },
+            {
+                question: "Wenn du drei Streichhölzer hast und nur eine einzige Schachtel mit einem einzigen Reibekopf – womit zündest du sie an?",
+                options: [
+                    "Mit dem Reibekopf der Schachtel",
+                    "Mit den Streichhölzern selbst",
+                    "Mit einem Feuerzeug",
+                    "Gar nicht"
+                ],
+                answer: 0,
+                explanation: "Mit dem Reibekopf der Schachtel zündest du sie an."
+            },
+            {
+                question: "Was kann man kochen, aber niemals essen?",
+                options: [
+                    "Wasser",
+                    "Einen Stein",
+                    "Wut",
+                    "Einen Rekord / Eine Wette"
+                ],
+                answer: 3,
+                explanation: "Man kann 'eine Wette kochen' (gewinnen) oder 'Wasser kochen' (letzteres kann man aber trinken/essen). Klassische Redewendung: Eine Wette kochen."
+            },
+            {
+                question: "Ein Fuchs läuft durch den Wald. Wie viele Beine hat der Fuchs?",
+                options: [
+                    "2 Beine",
+                    "4 Beine",
+                    "6 Beine",
+                    "Er hat gar keine Beine"
+                ],
+                answer: 1,
+                explanation: "Ein Fuchs ist ein Säugetier und hat ganz klassisch 4 Beine."
+            },
+            {
+                question: "Welches Wort wird im Wörterbuch immer falsch geschrieben?",
+                options: [
+                    "Falsch",
+                    "Wörterbuch",
+                    "Fehler",
+                    "Niemals"
+                ],
+                answer: 0,
+                explanation: "Das Wort 'falsch' wird im Duden/Wörterbuch logischerweise immer als 'falsch' geschrieben."
+            },
+            {
+                question: "Wie oft kann man von einem Berg 10 Meter tief graben, bevor man auf ein Hindernis stößt?",
+                options: [
+                    "Genau 1 Mal",
+                    "So oft man möchte",
+                    "Gar nicht, man gräbt nach oben",
+                    "Bis man auf Gestein trifft"
+                ],
+                answer: 0,
+                explanation: "Sobald du einmal 10 Meter tief gegraben hast, befindest du dich in einem Loch – danach gräbst du nicht mehr *vom* Berg, sondern im Loch."
             }
         ];
 
-        // State Variables
-        const TIME_LIMIT = 6.7; // seconds per question
+        // State variables
         let currentQuestionIndex = 0;
+        let score = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
         let timer = null;
-        let timeRemaining = TIME_LIMIT;
-        let userAnswers = []; // Records: { question, userChoiceText, correctText, status: 'correct'|'wrong'|'timeout', explanation }
-        let isSoundMuted = false;
-        let timerStartTime = 0;
+        let timeLeft = 15.0;
+        const totalTimePerQuestion = 15.0;
+        let isAnswered = false;
+        let resultsLog = [];
+        let totalTimeSpent = 0;
+        let soundEnabled = true;
 
-        // Web Audio API Sound Synthesizer (No external audio files needed)
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        // Web Audio API Setup for Sound Effects
         let audioCtx = null;
 
         function initAudio() {
             if (!audioCtx) {
-                audioCtx = new AudioContext();
-            }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
         }
 
         function playSound(type) {
-            if (isSoundMuted) return;
-            try {
-                initAudio();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-
-                const now = audioCtx.currentTime;
-
-                if (type === 'tick') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(600, now);
-                    gain.gain.setValueAtTime(0.05, now);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-                    osc.start(now);
-                    osc.stop(now + 0.05);
-                } else if (type === 'correct') {
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(523.25, now); // C5
-                    osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
-                    osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
-                    gain.gain.setValueAtTime(0.15, now);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
-                    osc.start(now);
-                    osc.stop(now + 0.4);
-                } else if (type === 'wrong') {
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(250, now);
-                    osc.frequency.linearRampToValueAtTime(150, now + 0.25);
-                    gain.gain.setValueAtTime(0.2, now);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-                    osc.start(now);
-                    osc.stop(now + 0.3);
-                } else if (type === 'timeout') {
-                    osc.type = 'square';
-                    osc.frequency.setValueAtTime(180, now);
-                    osc.frequency.setValueAtTime(120, now + 0.15);
-                    gain.gain.setValueAtTime(0.2, now);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
-                    osc.start(now);
-                    osc.stop(now + 0.4);
-                }
-            } catch (e) {
-                console.log("Audio play blocked/failed", e);
-            }
-        }
-
-        // DOM Elements
-        const startScreen = document.getElementById('start-screen');
-        const quizScreen = document.getElementById('quiz-screen');
-        const resultScreen = document.getElementById('result-screen');
-        const startBtn = document.getElementById('start-btn');
-        const restartBtn = document.getElementById('restart-btn');
-        const soundToggleBtn = document.getElementById('sound-toggle-btn');
-        const soundIcon = document.getElementById('sound-icon');
-
-        const questionCounter = document.getElementById('question-counter');
-        const timerText = document.getElementById('timer-text');
-        const timerBar = document.getElementById('timer-bar');
-        const questionText = document.getElementById('question-text');
-        const optionsContainer = document.getElementById('options-container');
-
-        // Event Listeners
-        startBtn.addEventListener('click', startQuiz);
-        restartBtn.addEventListener('click', startQuiz);
-
-        soundToggleBtn.addEventListener('click', () => {
-            isSoundMuted = !isSoundMuted;
-            if (isSoundMuted) {
-                soundIcon.className = 'fa-solid fa-volume-xmark text-rose-400';
-            } else {
-                soundIcon.className = 'fa-solid fa-volume-high text-slate-300';
-                playSound('tick');
-            }
-        });
-
-        function startQuiz() {
+            if (!soundEnabled) return;
             initAudio();
-            currentQuestionIndex = 0;
-            userAnswers = [];
-            
-            startScreen.classList.add('hidden');
-            resultScreen.classList.add('hidden');
-            quizScreen.classList.remove('hidden');
+            if (!audioCtx) return;
 
-            loadQuestion();
-        }
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
 
-        function loadQuestion() {
-            if (currentQuestionIndex >= questionsDB.length) {
-                showResults();
-                return;
-            }
+            const now = audioCtx.currentTime;
 
-            const currentQ = questionsDB[currentQuestionIndex];
-            
-            // Update UI
-            questionCounter.textContent = `Frage ${currentQuestionIndex + 1} von ${questionsDB.length}`;
-            questionText.textContent = currentQ.question;
-            
-            // Clear & Render Options
-            optionsContainer.innerHTML = '';
-            currentQ.options.forEach((opt, idx) => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn w-full p-4 rounded-2xl bg-slate-800/80 hover:bg-slate-700 text-left font-semibold text-white flex items-center justify-between group';
-                btn.innerHTML = `
-                    <span class="flex items-center space-x-3">
-                        <span class="w-8 h-8 rounded-xl bg-slate-700 group-hover:bg-indigo-600 text-slate-300 group-hover:text-white flex items-center justify-center text-sm font-bold transition">
-                            ${String.fromCharCode(65 + idx)}
-                        </span>
-                        <span class="text-sm md:text-base">${opt}</span>
-                    </span>
-                    <i class="fa-solid fa-chevron-right text-slate-500 opacity-0 group-hover:opacity-100 transition"></i>
-                `;
-                btn.addEventListener('click', () => handleAnswer(idx));
-                optionsContainer.appendChild(btn);
-            });
-
-            // Start Timer
-            startTimer();
-        }
-
-        function startTimer() {
-            clearInterval(timer);
-            timeRemaining = TIME_LIMIT;
-            timerStartTime = Date.now();
-            updateTimerUI();
-
-            timer = setInterval(() => {
-                const elapsed = (Date.now() - timerStartTime) / 1000;
-                timeRemaining = TIME_LIMIT - elapsed;
-
-                if (timeRemaining <= 0) {
-                    timeRemaining = 0;
-                    updateTimerUI();
-                    clearInterval(timer);
-                    handleTimeout();
-                } else {
-                    updateTimerUI();
-                }
-            }, 30);
-        }
-
-        function updateTimerUI() {
-            const formattedTime = Math.max(0, timeRemaining).toFixed(1);
-            timerText.textContent = `${formattedTime}s`;
-            
-            const percent = Math.max(0, (timeRemaining / TIME_LIMIT) * 100);
-            timerBar.style.width = `${percent}%`;
-
-            // Color shift based on remaining time
-            if (percent > 50) {
-                timerBar.className = "h-full bg-emerald-500 rounded-full transition-colors duration-300";
-            } else if (percent > 25) {
-                timerBar.className = "h-full bg-amber-400 rounded-full transition-colors duration-300";
-            } else {
-                timerBar.className = "h-full bg-rose-500 rounded-full transition-colors duration-300";
-            }
-        }
-
-        function disableOptionButtons() {
-            const buttons = optionsContainer.querySelectorAll('button');
-            buttons.forEach(btn => btn.disabled = true);
-        }
-
-        function handleAnswer(selectedIndex) {
-            clearInterval(timer);
-            disableOptionButtons();
-
-            const currentQ = questionsDB[currentQuestionIndex];
-            const isCorrect = selectedIndex === currentQ.correctIndex;
-            const buttons = optionsContainer.querySelectorAll('button');
-
-            // Save Response
-            userAnswers.push({
-                question: currentQ.question,
-                userAnswer: currentQ.options[selectedIndex],
-                correctAnswer: currentQ.options[currentQ.correctIndex],
-                status: isCorrect ? 'correct' : 'wrong',
-                explanation: currentQ.explanation
-            });
-
-            // Visual Feedback on Buttons
-            if (isCorrect) {
-                playSound('correct');
-                buttons[selectedIndex].classList.remove('bg-slate-800/80');
-                buttons[selectedIndex].classList.add('bg-emerald-600/90', 'border-emerald-400');
-            } else {
-                playSound('wrong');
-                buttons[selectedIndex].classList.remove('bg-slate-800/80');
-                buttons[selectedIndex].classList.add('bg-rose-600/90', 'border-rose-400');
-                
-                // Highlight correct one
-                buttons[currentQ.correctIndex].classList.remove('bg-slate-800/80');
-                buttons[currentQ.correctIndex].classList.add('bg-emerald-600/50', 'border-emerald-500/50');
-            }
-
-            // Next Question Delay
-            setTimeout(() => {
-                currentQuestionIndex++;
-                loadQuestion();
-            }, 1000);
-        }
-
-        function handleTimeout() {
-            disableOptionButtons();
-            playSound('timeout');
-            
-            const currentQ = questionsDB[currentQuestionIndex];
-
-            // Save Timeout Response
-            userAnswers.push({
-                question: currentQ.question,
-                userAnswer: "Zeit abgelaufen (Zu langsam!)",
-                correctAnswer: currentQ.options[currentQ.correctIndex],
-                status: 'timeout',
-                explanation: currentQ.explanation
-            });
-
-            // Highlight Correct Option
-            const buttons = optionsContainer.querySelectorAll('button');
-            if (buttons[currentQ.correctIndex]) {
-                buttons[currentQ.correctIndex].classList.remove('bg-slate-800/80');
-                buttons[currentQ.correctIndex].classList.add('bg-amber-600/70', 'border-amber-400');
-            }
-
-            setTimeout(() => {
-                currentQuestionIndex++;
-                loadQuestion();
-            }, 1200);
-        }
-
-        function showResults() {
-            quizScreen.classList.add('hidden');
-            resultScreen.classList.remove('hidden');
-
-            const correctCount = userAnswers.filter(a => a.status === 'correct').length;
-            const wrongCount = userAnswers.filter(a => a.status === 'wrong').length;
-            const timeoutCount = userAnswers.filter(a => a.status === 'timeout').length;
-
-            document.getElementById('score-correct').textContent = correctCount;
-            document.getElementById('score-wrong').textContent = wrongCount;
-            document.getElementById('score-timeout').textContent = timeoutCount;
-
-            const badge = document.getElementById('result-badge');
-            const title = document.getElementById('result-title');
-            const subtitle = document.getElementById('result-subtitle');
-
-            const scoreRatio = correctCount / questionsDB.length;
-
-            if (scoreRatio === 1) {
-                badge.className = "w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40";
-                badge.innerHTML = `<i class="fa-solid fa-crown"></i>`;
-                title.textContent = "Absolutes Geniestreich!";
-                subtitle.textContent = "Du hast keine einzige Fangfrage übersehen und warst blitzschnell!";
-            } else if (scoreRatio >= 0.7) {
-                badge.className = "w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/40";
-                badge.innerHTML = `<i class="fa-solid fa-graduation-cap"></i>`;
-                title.textContent = "Zertifizierter Denker!";
-                subtitle.textContent = "Sehr gut! Du hast die meisten Stolperfallen gekonnt umgangen.";
-            } else if (scoreRatio >= 0.4) {
-                badge.className = "w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-xl bg-amber-500/20 text-amber-400 border border-amber-500/40";
-                badge.innerHTML = `<i class="fa-solid fa-user-ninja"></i>`;
-                title.textContent = "Leicht auszutricksen!";
-                subtitle.textContent = "Du bist ein paar Fangfragen auf den Leim gegangen oder warst etwas zu langsam.";
-            } else {
-                badge.className = "w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-xl bg-rose-500/20 text-rose-400 border border-rose-500/40";
-                badge.innerHTML = `<i class="fa-solid fa-face-dizzy"></i>`;
-                title.textContent = "Klassischer Idiotentest-Opfer!";
-                subtitle.textContent = "Voll reingetappt! Aber keine Sorge: Lies dir die Erklärungen durch und versuche es erneut.";
-            }
-
-            // Render Detailed Review
-            const detailsList = document.getElementById('details-list');
-            detailsList.innerHTML = '';
-
-            userAnswers.forEach((ans, i) => {
-                const card = document.createElement('div');
-                
-                let statusBadge = '';
-                let borderStyle = '';
-
-                if (ans.status === 'correct') {
-                    statusBadge = `<span class="px-2.5 py-1 text-xs font-bold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"><i class="fa-solid fa-check mr-1"></i>Richtig</span>`;
-                    borderStyle = 'border-l-4 border-l-emerald-500';
-                } else if (ans.status === 'wrong') {
-                    statusBadge = `<span class="px-2.5 py-1 text-xs font-bold rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30"><i class="fa-solid fa-xmark mr-1"></i>Falsch</span>`;
-                    borderStyle = 'border-l-4 border-l-rose-500';
-                } else {
-                    statusBadge = `<span class="px-2.5 py-1 text-xs font-bold rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30"><i class="fa-regular fa-clock mr-1"></i>Zu langsam</span>`;
-                    borderStyle = 'border-l-4 border-l-amber-500';
-                }
-
-                card.className = `bg-slate-800/40 p-4 rounded-2xl border border-slate-700/60 ${borderStyle}`;
-                card.innerHTML = `
-                    <div class="flex justify-between items-start mb-2 gap-2">
-                        <h4 class="font-bold text-slate-100 text-sm md:text-base">${i + 1}. ${ans.question}</h4>
-                        ${statusBadge}
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs md:text-sm my-2">
-                        <div class="bg-slate-900/40 p-2.5 rounded-xl">
-                            <span class="text-slate-400 block text-[11px] font-semibold uppercase">Deine Antwort</span>
-                            <span class="${ans.status === 'correct' ? 'text-emerald-300 font-semibold' : 'text-rose-300'}">${ans.userAnswer}</span>
-                        </div>
-                        <div class="bg-slate-900/40 p-2.5 rounded-xl">
-                            <span class="text-slate-400 block text-[11px] font-semibold uppercase">Richtige Antwort</span>
-                            <span class="text-emerald-400 font-semibold">${ans.correctAnswer}</span>
-                        </div>
-                    </div>
-
-                    <div class="mt-2 text-xs md:text-sm text-indigo-200 bg-indigo-950/40 p-2.5 rounded-xl border border-indigo-800/30 flex items-start space-x-2">
-                        <i class="fa-solid fa-lightbulb text-amber-400 mt-0.5"></i>
-                        <span><strong>Erklärung:</strong> ${ans.explanation}</span>
-                    </div>
-                `;
-                detailsList.appendChild(card);
-            });
-        }
-    </script>
-</body>
-</html>
+            if (type === 'correct') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
+                gainNode.gain.setValueAtTime(0.15, now);
+                gainNode.gain.linearRampToValueAtTime(0, now + 0.
